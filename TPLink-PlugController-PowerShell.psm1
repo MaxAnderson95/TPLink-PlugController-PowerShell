@@ -1,5 +1,19 @@
 Function ConvertTo-TPLinkDataFormat {
 
+    <#
+
+        .SYNOPSIS
+        Converts a JSON formatted command to the "encrypted" byte form that the TPLink plug will accept
+
+        .PARAMETER Body
+        A string that consits of the JSON formatted command to the plug
+
+        .EXAMPLE
+        ConvertTo-TPLinkDataFormat -Body '{"system":{"set_relay_state":{"state":1}}}'
+
+
+    #>
+
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory = $True, HelpMessage = 'Body to Encode')]
@@ -27,6 +41,16 @@ Function ConvertTo-TPLinkDataFormat {
 }
 
 Function ConvertFrom-TPLinkDataFormat {
+
+    <#
+
+        .SYNOPSIS
+        Converts an "encrypted" byte reply from the TPLink plug into readable JSON format
+
+        .PARAMETER Body
+        A byte array response to be converted back into readable JSON
+
+    #>
 
     [CmdletBinding()]
     param (
