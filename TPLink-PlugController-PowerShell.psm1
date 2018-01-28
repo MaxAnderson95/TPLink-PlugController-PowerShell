@@ -54,7 +54,7 @@ Function ConvertFrom-TPLinkDataFormat {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true,HelpMessage = 'Body to Decode')]
+        [Parameter(Mandatory = $true)]
         [byte[]]$Body,
         
         [switch]$IncludeBytes = $false
@@ -73,4 +73,23 @@ Function ConvertFrom-TPLinkDataFormat {
     Write-Output $return
     if($includeBytes){Write-Output $origret}
     
+}
+
+Function Send-TPLinkCommand {
+
+    <#
+
+    #>
+
+    [cmdletbinding()]
+    param (
+
+        [Parameter(Mandatory=$True, Position=0, ParameterSetName='ClearTextCommand')]
+        [string]$Command,
+
+        [Parameter(Mandatory=$True, Position=0, ParameterSetName='JSONFormattedCommand')]
+        [string]$JSON
+    
+    )
+
 }
