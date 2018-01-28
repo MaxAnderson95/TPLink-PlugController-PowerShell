@@ -92,7 +92,11 @@ Function Send-TPLinkCommand {
 
         [Parameter(Mantatory=$True, Position=1, ParameterSetName='ClearTextCommand')]
         [Parameter(Mantatory=$True, Position=1, ParameterSetName='JSONFormattedCommand')]
-        [ipaddress]$IPAddress
+        [ipaddress]$IPAddress,
+
+        [Parameter(Position=2, ParameterSetName='ClearTextCommand')]
+        [Parameter(Position=2, ParameterSetName='JSONFormattedCommand')]
+        [int]$Port = 9999
     
     )
 
