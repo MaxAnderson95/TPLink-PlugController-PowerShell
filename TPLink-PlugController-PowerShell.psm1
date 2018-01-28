@@ -88,8 +88,14 @@ Function Send-TPLinkCommand {
         [string]$Command,
 
         [Parameter(Mandatory=$True, Position=0, ParameterSetName='JSONFormattedCommand')]
-        [string]$JSON
+        [string]$JSON,
+
+        [Parameter(Mantatory=$True, Position=1, ParameterSetName='ClearTextCommand')]
+        [Parameter(Mantatory=$True, Position=1, ParameterSetName='JSONFormattedCommand')]
+        [ipaddress]$IPAddress
     
     )
+
+    #
 
 }
