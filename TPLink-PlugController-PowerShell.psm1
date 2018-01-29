@@ -115,6 +115,10 @@ Function Send-TPLinkCommand {
     Do {
         
         $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+
+        #Debug
+        $Debug_StreamWrite = $Debug_StreamWrite + 1
+        Write-Debug "The Stream has been written to $Debug_StreamWrite time(s). DataAvailable is currently $($Stream.DataAvailable)"
     
     } Until (
         
@@ -143,6 +147,7 @@ Function Send-TPLinkCommand {
 
         }
 
+        #Debug
         Write-Debug "TCPClient connection status is: $($TCPClient.Connected)"
 
     }
