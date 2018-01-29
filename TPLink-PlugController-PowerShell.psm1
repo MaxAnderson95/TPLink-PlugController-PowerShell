@@ -113,10 +113,51 @@ Function Send-TPLinkCommand {
 
     #Write the command to the TCP Client stream as many times as needed. This is usually twice for some reason.
     Do {
+        
         $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+    
     } Until (
+        
         $Stream.DataAvailable -eq $True
+    
     )
+
+    #Create a Byte object the size of the reponse that will hold the response from the plug.
+    $BindResponseBuffer = New-Object Byte[] -ArgumentList $TCPClient.Available
+
+    # Loop through the buffer till we get the full JSON response    
+    While ($TCPClient.Connected -eq $True) {
+
+        #Use the read method and specify the buffer, the offset, and the size
+        $Read = $stream.Read($bindResponseBuffer, 0, $bindResponseBuffer.Length)
+
+        #If the read comes back empty, break out of the While loop
+        If ($Read -eq 0){
+            
+            break
+        
+        } Else {
+
+            [Array]$BytesReceived += $bindResponseBuffer[0..($Read -1)]
+            [Array]::Clear($bindResponseBuffer, 0, $Read)
+
+        }
+
+        Write-Debug "TCPClient connection status is: $($TCPClient.Connected)"
+
+    }
+
+    If ($BytesReceived -eq $Null) {
+
+        Write-Output "No response received from the plug"
+
+    } Else {
+
+        $Response = ConvertFrom-Json -InputObject (ConvertFrom-TPLinkDataFormat -Body $BytesReceived)
+
+        Write-Output $Response
+
+    }
 
     #Cleanup the Network Stack
     $Stream.Flush()
