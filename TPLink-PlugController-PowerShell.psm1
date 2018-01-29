@@ -112,8 +112,16 @@ Function Send-TPLinkCommand {
     #Convert the JSON command to TPLink byte format
     $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
 
-    #Write the command to the TCP Client stream twice. This is required for some reason.
-    $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
-    $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+    #Write the command to the TCP Client stream as many times as needed. This is usually twice for some reason.
+    Do {
+        $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+    } Until (
+        $Stream.DataAvailable -eq $True
+    )
+
+    #Cleanup the Network Stack
+    $stream.flush()
+    $Tcpclient.Dispose()
+    $Tcpclient.Close()
 
 }
