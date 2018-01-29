@@ -123,7 +123,7 @@ Function Send-TPLinkCommand {
 
     } Until (
         
-        $Stream.DataAvailable -eq $True
+        $TCPClient.Available -gt 0
     
     )
 
