@@ -116,10 +116,8 @@ Function Send-TPLinkCommand {
         
         $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
 
-        #Debug
         $Debug_StreamWriteCount = $Debug_StreamWriteCount + 1
         Write-Debug "The Stream has been written to $Debug_StreamWriteCount time(s). DataAvailable is currently $($Stream.DataAvailable)"
-        #Debug
 
     } Until (
         
