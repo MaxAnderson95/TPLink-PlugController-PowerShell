@@ -81,25 +81,39 @@ Function Send-TPLinkCommand {
 
     #>
 
-    [cmdletbinding()]
+    [CmdletBinding()]
     param (
 
-        [Parameter(Mandatory=$True, Position=0, ParameterSetName='ClearTextCommand')]
+        [Parameter(ParameterSetName='ClearTextCommand',Mandatory=$True,Position=0)]
         [string]$Command,
 
-        [Parameter(Mandatory=$True, Position=0, ParameterSetName='JSONFormattedCommand')]
+        [Parameter(ParameterSetName='JSONFormattedCommand',Mandatory=$True,Position=0)]
         [string]$JSON,
 
-        [Parameter(Mantatory=$True, Position=1, ParameterSetName='ClearTextCommand')]
-        [Parameter(Mantatory=$True, Position=1, ParameterSetName='JSONFormattedCommand')]
+        [Parameter(ParameterSetName='ClearTextCommand',Mandatory=$True,Position=1)]
+        [Parameter(ParameterSetName='JSONFormattedCommand',Mandatory=$True,Position=1)]
         [ipaddress]$IPAddress,
-
-        [Parameter(Position=2, ParameterSetName='ClearTextCommand')]
-        [Parameter(Position=2, ParameterSetName='JSONFormattedCommand')]
+        
+        [Parameter(ParameterSetName='ClearTextCommand',Position=2)]
+        [Parameter(ParameterSetName='JSONFormattedCommand',Position=2)]
         [int]$Port = 9999
     
     )
 
-    #
+    #Create an instance of the .Net TCP Client class
+    $TCPClient = New-Object -TypeName System.Net.Sockets.TCPClient
+
+    #Use the TCP client class to connect to the TP-Link plug
+    $TCPClient.connect($IPAddress,$Port)
+
+    #Return the network stream from the TCP client
+    $Stream = $TCPClient.GetStream()
+
+    #Convert the JSON command to TPLink byte format
+    $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
+
+    #Write the command to the TCP Client stream
+    $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+    $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
 
 }
