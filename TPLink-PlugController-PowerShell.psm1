@@ -11,7 +11,6 @@ Function ConvertTo-TPLinkDataFormat {
         .EXAMPLE
         ConvertTo-TPLinkDataFormat -Body '{"system":{"set_relay_state":{"state":1}}}'
 
-
     #>
 
     [CmdletBinding()]
@@ -120,7 +119,7 @@ Function Send-TPLinkCommand {
     )
 
     #Cleanup the Network Stack
-    $stream.flush()
+    $Stream.Flush()
     $Tcpclient.Dispose()
     $Tcpclient.Close()
 
