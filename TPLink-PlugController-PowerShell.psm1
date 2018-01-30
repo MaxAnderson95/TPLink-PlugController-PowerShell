@@ -115,33 +115,38 @@ Function Send-TPLinkCommand {
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
 
-    Start-Sleep -Seconds 1
+    #Wait for data to become available
+    While ($TCPClient.Available -eq 0) {
+            
+        Write-Debug "TCP Client Availablity buffer was not initially filled!"
+        Write-Verbose "TCP Client Availablity buffer was not initially filled!"
+        Start-Sleep -Seconds 1
+    
+    }
+
+    #Start an additional half second sleep to allow all of the data to come in
+    Start-Sleep -Milliseconds 500
 
     #Create a Byte object the size of the reponse that will hold the response from the plug.
-    $BindResponseBuffer = New-Object Byte[] -ArgumentList $TCPClient.Available
+    $BindResponseBuffer = New-Object Byte[] -ArgumentList $TCPClient.Available    
 
-    # Loop through the buffer till we get the full JSON response    
-    While ($TCPClient.Connected -eq $True) {
+    #Use the read method and specify the buffer, the offset, and the size
+    $Read = $stream.Read($bindResponseBuffer, 0, $bindResponseBuffer.Length)
 
-        #Use the read method and specify the buffer, the offset, and the size
-        $Read = $stream.Read($bindResponseBuffer, 0, $bindResponseBuffer.Length)
-
-        #If the read comes back empty, break out of the While loop
-        If ($Read -eq 0){
-            
-            break
+    #If the read comes back empty, break out of the While loop
+    If ($Read -eq 0){
         
-        } Else {
+        break
+    
+    } Else {
 
-            [Array]$BytesReceived += $bindResponseBuffer[0..($Read -1)]
-            [Array]::Clear($bindResponseBuffer, 0, $Read)
-
-        }
-
-        #Debug
-        Write-Debug "TCPClient connection status is: $($TCPClient.Connected)"
-
+        [Array]$BytesReceived += $bindResponseBuffer[0..($Read -1)]
+        [Array]::Clear($bindResponseBuffer, 0, $Read)
+        
     }
+
+    #Debug
+    Write-Debug "TCPClient connection status is: $($TCPClient.Connected)"
 
     If ($BytesReceived -eq $Null) {
 
