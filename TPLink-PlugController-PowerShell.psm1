@@ -111,19 +111,11 @@ Function Send-TPLinkCommand {
     #Convert the JSON command to TPLink byte format
     $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
 
-    #Write the command to the TCP Client stream as many times as needed. This is usually twice for some reason.
-    Do {
-        
-        $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+    #Write the command to the TCP Client stream twice. Unsure why twice.
+    $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
+    $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
 
-        $Debug_StreamWriteCount = $Debug_StreamWriteCount + 1
-        Write-Debug "The Stream has been written to $Debug_StreamWriteCount time(s). DataAvailable is currently $($Stream.DataAvailable)"
-
-    } Until (
-        
-        $TCPClient.Available -gt 0
-    
-    )
+    Start-Sleep -Seconds 1
 
     #Create a Byte object the size of the reponse that will hold the response from the plug.
     $BindResponseBuffer = New-Object Byte[] -ArgumentList $TCPClient.Available
@@ -157,14 +149,19 @@ Function Send-TPLinkCommand {
 
     } Else {
 
-        $Response = ConvertFrom-Json -InputObject (ConvertFrom-TPLinkDataFormat -Body $BytesReceived)
+        $Response = ConvertFrom-JSON -InputObject (ConvertFrom-TPLinkDataFormat -Body $BytesReceived)
 
         Write-Output $Response
 
     }
 
     #Cleanup the Network Stack
+    $Bytesreceived = $null
+    $Response = $null
+    $bindResponseBuffer = $null
     $Stream.Flush()
+    $Stream.Dispose()
+    $Stream.Close()
     $Tcpclient.Dispose()
     $Tcpclient.Close()
 
