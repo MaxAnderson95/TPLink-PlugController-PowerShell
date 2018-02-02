@@ -2,6 +2,34 @@ Function Send-TPLinkCommand {
 
     <#
 
+        .SYNOPSIS
+        Sends a command to a TPLink HS100 or HS110 smart plug
+
+        .DESCRIPTION
+        This function can send a supported friendly command or a RAW JSON command to a TPLink
+        smart plug and receive a response.
+
+        .PARAMETER Command
+        A string containing the command. Used instead of -JSON.
+
+        .PARAMETER JSON
+        A string contianing the raw JSON command. Used instead of -Command.
+
+        .PARAMETER IPAddress
+        The IP address of the TPLink smart plug
+
+        .PARAMETER Port
+        The TCP port number to send the messeges on. The default is TCP port 9999 and shouldn't ever need to be changed.
+
+        .EXAMPLE
+        PS > Send-TPLinkCommand -Command TurnOn -IPAddress 192.168.1.2
+
+        .EXAMPLE
+        PS > Send-TPLinkCommand -JSON '{"system":{"set_relay_state":{"state":1}}}' -IPAddress 192.168.1.2
+
+        .NOTES
+        A full list of commands can be found at https://github.com/MaxAnderson95/TPLink-PlugController-PowerShell/blob/master/Sources/TPLink-Smarthome-commands.txt
+        
     #>
 
     [CmdletBinding()]
