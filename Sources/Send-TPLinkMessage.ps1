@@ -18,6 +18,9 @@ Function Send-TPLinkCommand {
         .PARAMETER IPAddress
         The IP address of the TPLink smart plug
 
+        .PARAMETER Output
+        A string contining the desired output type. A validate set allows 'JSON','Object', or 'Friendly'
+
         .PARAMETER Port
         The TCP port number to send the messeges on. The default is TCP port 9999 and shouldn't ever need to be changed.
 
@@ -51,9 +54,18 @@ Function Send-TPLinkCommand {
         [Parameter(ParameterSetName='FriendlyCommand',Mandatory=$True,Position=1)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Mandatory=$True,Position=1)]
         [ipaddress]$IPAddress,
-        
+
         [Parameter(ParameterSetName='FriendlyCommand',Position=2)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Position=2)]
+        [ValidateSet(
+            'JSON',
+            'Object',
+            'Friendly'
+        )]
+        [string]$Output,
+
+        [Parameter(ParameterSetName='FriendlyCommand',Position=3)]
+        [Parameter(ParameterSetName='JSONFormattedCommand',Position=3)]
         [int]$Port = 9999
     
     )
