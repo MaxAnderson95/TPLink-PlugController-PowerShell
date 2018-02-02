@@ -21,6 +21,8 @@ Function ConvertTo-TPLinkJSONCommand {
 
     )
 
-    
+    $FriendlyNameMapping = Import-Csv -Path 'FriendlyCommandMapping.csv'
+
+    Write-Output $FriendlyNameMapping
 
 }
