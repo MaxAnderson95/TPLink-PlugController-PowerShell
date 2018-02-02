@@ -60,9 +60,10 @@ Function Send-TPLinkCommand {
         [ValidateSet(
             'JSON',
             'Object',
-            'Friendly'
+            'Friendly',
+            'None'
         )]
-        [string]$Output,
+        [string]$Output = Object,
 
         [Parameter(ParameterSetName='FriendlyCommand',Position=3)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Position=3)]
@@ -156,6 +157,12 @@ Function Send-TPLinkCommand {
             }
 
             'Friendly' {
+
+            }
+
+            'None' {
+
+                Break
 
             }
 
