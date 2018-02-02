@@ -63,7 +63,7 @@ Function Send-TPLinkCommand {
             'Friendly',
             'None'
         )]
-        [string]$Output = Object,
+        [string]$Output = 'Object',
 
         [Parameter(ParameterSetName='FriendlyCommand',Position=3)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Position=3)]
