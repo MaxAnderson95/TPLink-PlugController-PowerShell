@@ -139,11 +139,28 @@ Function Send-TPLinkCommand {
 
     If ($BytesReceived -eq $Null) {
 
-        Write-Output "No response received from the plug"
+        Write-Error "No response received from the plug"
 
     } Else {
 
-        $Response = ConvertFrom-JSON -InputObject (ConvertFrom-TPLinkDataFormat -Body $BytesReceived)
+        Switch ($Output) {
+
+            'JSON' {
+
+            }
+            
+            'Object' {
+
+                $Response = ConvertFrom-JSON -InputObject (ConvertFrom-TPLinkDataFormat -Body $BytesReceived)
+                
+            }
+
+            'Friendly' {
+
+            }
+
+        }
+        
 
         Write-Output $Response
 
