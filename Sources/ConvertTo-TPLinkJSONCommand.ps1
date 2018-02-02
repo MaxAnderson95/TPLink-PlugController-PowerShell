@@ -25,7 +25,7 @@ Function ConvertTo-TPLinkJSONCommand {
         [String]$InputObject,
 
         [Parameter()]
-        [String]$FilePath = 'FriendlyCommandMapping.csv'
+        [String]$FilePath = "$PSScriptRoot\FriendlyCommandMapping.csv"
 
 
     )

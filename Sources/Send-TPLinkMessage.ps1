@@ -7,17 +7,24 @@ Function Send-TPLinkCommand {
     [CmdletBinding()]
     param (
 
-        [Parameter(ParameterSetName='ClearTextCommand',Mandatory=$True,Position=0)]
+        [Parameter(ParameterSetName='FriendlyCommand',Mandatory=$True,Position=0)]
+        [ValidateSet(
+            'TurnOn',
+            'TurnOff',    
+            'SystemInfo',
+            'Reboot',
+            'Reset'
+        )]
         [string]$Command,
 
         [Parameter(ParameterSetName='JSONFormattedCommand',Mandatory=$True,Position=0)]
         [string]$JSON,
 
-        [Parameter(ParameterSetName='ClearTextCommand',Mandatory=$True,Position=1)]
+        [Parameter(ParameterSetName='FriendlyCommand',Mandatory=$True,Position=1)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Mandatory=$True,Position=1)]
         [ipaddress]$IPAddress,
         
-        [Parameter(ParameterSetName='ClearTextCommand',Position=2)]
+        [Parameter(ParameterSetName='FriendlyCommand',Position=2)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Position=2)]
         [int]$Port = 9999
     
@@ -32,8 +39,26 @@ Function Send-TPLinkCommand {
     #Return the network stream from the TCP client
     $Stream = $TCPClient.GetStream()
 
-    #Convert the JSON command to TPLink byte format
-    $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
+    Switch ($PSCmdlet.ParameterSetName) {
+
+        'FriendlyCommand' {
+
+            #Convert the friendly command to the corresponding JSON command
+            $JSON = ConvertTo-TPLinkJSONCommand -InputObject $Command
+
+            #Convert the JSON command to TPLink byte format
+            $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
+
+        }
+
+        'JSONFormattedCommand' {
+
+            #Convert the JSON command to TPLink byte format
+            $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
+
+        }
+
+    }
 
     #Write the command to the TCP Client stream twice. Unsure why twice.
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
