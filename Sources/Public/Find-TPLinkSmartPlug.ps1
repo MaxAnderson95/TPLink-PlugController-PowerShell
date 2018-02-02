@@ -5,9 +5,6 @@ Function Find-TPLinkSmartPlug {
     #>
 
     [CmdletBinding()]
-    Param (
-        
-    )
 
     #Check for the IPv4 Resource files
     Write-Verbose "Checking for the IPv4 Network Scanner resource files"
