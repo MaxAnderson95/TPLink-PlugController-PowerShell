@@ -1,0 +1,6 @@
+﻿Command,JSON
+SystemInfo,"{""system"":{""get_sysinfo"":null}}"
+Reboot,"{""system"":{""reboot"":{""delay"":1}}}"
+Reset,"{""system"":{""reset"":{""delay"":1}}}"
+TurnOn,"{""system"":{""set_relay_state"":{""state"":1}}}"
+TurnOff,"{""system"":{""set_relay_state"":{""state"":0}}}
