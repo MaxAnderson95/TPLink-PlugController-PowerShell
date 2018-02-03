@@ -10,7 +10,6 @@ This is a PowerShell module that can be used for controlling a TPLink HS100 or H
 
 3. Send a command to your unit. For example we can turn on the unit.
 ![Sending the command Friendly](https://i.imgur.com/AsSGV5L.gif)
-
 Or Send the command using raw JSON.
 ![Sending the command](https://i.imgur.com/QhuCZtW.gif)
 
