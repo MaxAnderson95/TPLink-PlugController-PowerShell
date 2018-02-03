@@ -2,9 +2,16 @@ Function Find-TPLinkSmartPlug {
 
     <#
 
-    #>
+        .SYNOPSIS
+        Searches the network for TPLink Smart Hubs
 
-    [CmdletBinding()]
+        .EXAMPLE
+        PS > Find-TPLinkSmartPlug
+        IPv4Address Status MAC               Vendor
+        ----------- ------ ---               ------
+        10.11.12.76 Up     70-4F-57-DB-3E-E0 TP-Link Technologies Co. Ltd
+
+    #>
 
     #Check for the IPv4 Resource files
     Write-Verbose "Checking for the IPv4 Network Scanner resource files"
@@ -36,9 +43,22 @@ Function Find-TPLinkSmartPlug {
     }
 
     #Start a network scan using 3rd party script
-    $ScanResults = ..\Resources\IPv4-Network-Scanner\IPv4NetworkScan.ps1 -IPv4Address $NetInfo.IPAddress -CIDR $NetInfo.PrefixLength -DisableDNSResolving -EnableMACResolving
+    $ScanResults = . ..\Resources\IPv4-Network-Scanner\IPv4NetworkScan.ps1 -IPv4Address $NetInfo.IPAddress -CIDR $NetInfo.PrefixLength -DisableDNSResolving -EnableMACResolving
 
     #Filter the results for TPLink Smart Plugs
     $FoundPlugs = $ScanResults | Where-Object { $_.Vendor -like "*TP-Link*" }
+
+    If ($FoundPlugs -eq $Null) {
+
+        Write-Error "No TPLink Smart Plugs found on your network"
+        Break
+
+    }
+    
+    Else {
+
+        Write-Output $FoundPlugs
+
+    }
 
 }
