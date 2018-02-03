@@ -18,5 +18,8 @@ Or Send the command using raw JSON.
 4. `The Send-TPLinkCommand` outputs a PSCustomObject with the respose. This is generated from the raw JSON response from the plug. This response can be placed in a variable and analyzed.
 ![Analyzing the output](https://i.imgur.com/AiXksBt.gif)
 
+### List of Available JSON Commands
+Click [here](https://github.com/MaxAnderson95/TPLink-PlugController-PowerShell/blob/master/Sources/Resources/TPLink-Smarthome-commands.txt) to find a list of valid JSON commands the HS100 or HS110 will accept.
+
 ## Credit
 Big thanks to [EgoManiac's TPLink-PoSH](https://github.com/EgoManiac/TPlink-PoSH) for the code base for this project. My goal with this was to: cleanup the code, convert this to module format, and give myself a project.
