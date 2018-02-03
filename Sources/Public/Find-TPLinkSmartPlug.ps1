@@ -43,7 +43,7 @@ Function Find-TPLinkSmartPlug {
     }
 
     #Start a network scan using 3rd party script
-    $ScanResults = . ..\Resources\IPv4-Network-Scanner\IPv4NetworkScan.ps1 -IPv4Address $NetInfo.IPAddress -CIDR $NetInfo.PrefixLength -DisableDNSResolving -EnableMACResolving
+    $ScanResults = . $PSScriptRoot\..\Resources\IPv4-Network-Scanner\IPv4NetworkScan.ps1 -IPv4Address $NetInfo.IPAddress -CIDR $NetInfo.PrefixLength -DisableDNSResolving -EnableMACResolving
 
     #Filter the results for TPLink Smart Plugs
     $FoundPlugs = $ScanResults | Where-Object { $_.Vendor -like "*TP-Link*" }
