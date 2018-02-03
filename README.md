@@ -5,9 +5,13 @@ This is a PowerShell module that can be used for controlling a TPLink HS100 or H
 1. Begin by downloading or cloning the repository to a directory of your choice. Preferably a directory in your `$env:PSModulePath` so that the module will auto-load itself when running any of the exported functions.
 ![Cloning the repo gif](https://i.imgur.com/4jYVufF.gif)
 
-2. Determine the IP address of your plug unit [using an IP scanner](http://www.advanced-ip-scanner.com/) or checking your DHCP server's lease list.
+2. Determine the IP address of your plug using `Find-TPLinkSmartPlug`.
+![Finding Smart Plugs](https://i.imgur.com/Ky4i5bU.gif)
 
 3. Send a command to your unit. For example we can turn on the unit.
+![Sending the command Friendly](https://i.imgur.com/AsSGV5L.gif)
+
+Or Send the command using raw JSON.
 ![Sending the command](https://i.imgur.com/QhuCZtW.gif)
 
 *Optional*
