@@ -60,7 +60,6 @@ Function Send-TPLinkCommand {
         [ValidateSet(
             'JSON',
             'Object',
-            'Friendly',
             'None'
         )]
         [string]$Output = 'Object',
