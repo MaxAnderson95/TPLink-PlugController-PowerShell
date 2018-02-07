@@ -158,10 +158,6 @@ Function Send-TPLinkCommand {
                 
             }
 
-            'Friendly' {
-
-            }
-
             'None' {
 
                 Break
