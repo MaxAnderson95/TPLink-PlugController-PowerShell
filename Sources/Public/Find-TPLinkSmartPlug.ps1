@@ -22,19 +22,20 @@ Function Find-TPLinkSmartPlug {
         #If they're not found, error and end the script
         Write-Error "IPv4-Network-Scanner resource not found. Please re-clone/download the TPLink PowerShell repo."
         Break
-        
+
     }
 
     Write-Verbose "IPv4 Network Scanner resource files found"
 
     Try {
-        
+
         #Get the IP address and CIDR of the current running machine
         Write-Verbose "Attempting to get IP and subnet information from the machine"
-        $NetInfo = (Get-NetIPAddress -AddressFamily IPv4)[0] | Select-Object IPAddress,PrefixLength
+        $IPaddress =  (Get-NetIPAddress -AddressFamily IPv4) | Select-Object IPAddress,PrefixLength
+        $NetInfo =  $IPaddress | Where-Object {($_.IPAddress -match "(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)")}
 
     }
-    
+
     Catch {
 
         Write-Error "Unable to find IP address or adapter information."
@@ -46,7 +47,16 @@ Function Find-TPLinkSmartPlug {
     $ScanResults = . $PSScriptRoot\..\Resources\IPv4-Network-Scanner\IPv4NetworkScan.ps1 -IPv4Address $NetInfo.IPAddress -CIDR $NetInfo.PrefixLength -DisableDNSResolving -EnableMACResolving
 
     #Filter the results for TPLink Smart Plugs
-    $FoundPlugs = $ScanResults | Where-Object { $_.Vendor -like "*TP-Link*" }
+    $possible = $ScanResults | Where-Object { $_.Vendor -like "*TP-Link*" }
+
+    foreach ($ip in $possible) {
+        $connection = (New-Object Net.Sockets.TcpClient)
+        $connection.Connect($possible.IPv4Address,9999)
+        if ($connection.Connected) {
+            $FoundPlugs += $ip
+            }
+    }
+
 
     If ($FoundPlugs -eq $Null) {
 
