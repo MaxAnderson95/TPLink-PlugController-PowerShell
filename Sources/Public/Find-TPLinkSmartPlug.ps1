@@ -51,7 +51,7 @@ Function Find-TPLinkSmartPlug {
 
     foreach ($ip in $possible) {
         $connection = (New-Object Net.Sockets.TcpClient)
-        $connection.Connect($possible.IPv4Address,9999)
+        $connection.Connect($ip.IPv4Address,9999)
         if ($connection.Connected) {
             $FoundPlugs += $ip
             }
