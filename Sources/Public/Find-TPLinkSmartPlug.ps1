@@ -22,19 +22,20 @@ Function Find-TPLinkSmartPlug {
         #If they're not found, error and end the script
         Write-Error "IPv4-Network-Scanner resource not found. Please re-clone/download the TPLink PowerShell repo."
         Break
-        
+
     }
 
     Write-Verbose "IPv4 Network Scanner resource files found"
 
     Try {
-        
+
         #Get the IP address and CIDR of the current running machine
         Write-Verbose "Attempting to get IP and subnet information from the machine"
-        $NetInfo = (Get-NetIPAddress -AddressFamily IPv4)[0] | Select-Object IPAddress,PrefixLength
+        $IPaddress =  (Get-NetIPAddress -AddressFamily IPv4) | Select-Object IPAddress,PrefixLength
+        $NetInfo =  $IPaddress | Where-Object {($_.IPAddress -match "(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)")}
 
     }
-    
+
     Catch {
 
         Write-Error "Unable to find IP address or adapter information."
