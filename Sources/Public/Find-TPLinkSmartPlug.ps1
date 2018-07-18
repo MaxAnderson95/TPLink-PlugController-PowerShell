@@ -32,7 +32,7 @@ Function Find-TPLinkSmartPlug {
         #Get the IP address and CIDR of the current running machine
         Write-Verbose "Attempting to get IP and subnet information from the machine"
         $IPaddress =  (Get-NetIPAddress -AddressFamily IPv4) | Select-Object IPAddress,PrefixLength
-        $NetInfo =  $IPaddress | Where-Object {($_.IPAddress -match "(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)")}
+        $rfc1918 =  $IPaddress | Where-Object {($_.IPAddress -match "(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)")}
 
     }
 
@@ -42,6 +42,7 @@ Function Find-TPLinkSmartPlug {
         Break
 
     }
+foreach ($NetInfo in $RFC1918) {
 
     #Start a network scan using 3rd party script
     $ScanResults = . $PSScriptRoot\..\Resources\IPv4-Network-Scanner\IPv4NetworkScan.ps1 -IPv4Address $NetInfo.IPAddress -CIDR $NetInfo.PrefixLength -DisableDNSResolving -EnableMACResolving
@@ -56,7 +57,7 @@ Function Find-TPLinkSmartPlug {
             $FoundPlugs += $ip
             }
     }
-
+}
 
     If ($FoundPlugs -eq $Null) {
 
