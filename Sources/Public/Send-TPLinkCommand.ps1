@@ -66,7 +66,9 @@ Function Send-TPLinkCommand {
 
         [Parameter(ParameterSetName='FriendlyCommand',Position=3)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Position=3)]
-        [int]$Port = 9999
+        [int]$Port = 9999,
+		
+        [switch]$NoWait
     
     )
 
@@ -104,6 +106,9 @@ Function Send-TPLinkCommand {
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
 
+    #If NoWait, exit immediately and don't wait for response
+    if ($NoWait) { return $true }
+	
     #Wait for data to become available
     While ($TCPClient.Available -eq 0) {
             
