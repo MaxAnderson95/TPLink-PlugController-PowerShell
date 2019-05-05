@@ -66,9 +66,19 @@ Function Send-TPLinkCommand {
 
         [Parameter(ParameterSetName='FriendlyCommand',Position=3)]
         [Parameter(ParameterSetName='JSONFormattedCommand',Position=3)]
-        [int]$Port = 9999
+        [int]$Port = 9999,
+		
+        [switch]$NoWait
     
     )
+
+    $JSONCommands = @{
+        SystemInfo = '{"system":{"get_sysinfo":null}}'
+        Reboot = '{"system":{"reboot":{"delay":1}}}'
+        Reset = '{"system":{"reset":{"delay":1}}}'
+        TurnOn = '{"system":{"set_relay_state":{"state":1}}}'
+        TurnOff = '{"system":{"set_relay_state":{"state":0}}}'
+    }
 
     #Create an instance of the .Net TCP Client class
     $TCPClient = New-Object -TypeName System.Net.Sockets.TCPClient
@@ -84,7 +94,7 @@ Function Send-TPLinkCommand {
         'FriendlyCommand' {
 
             #Convert the friendly command to the corresponding JSON command
-            $JSON = ConvertTo-TPLinkJSONCommand -InputObject $Command
+            $JSON = $JSONCommands.$Command
 
             #Convert the JSON command to TPLink byte format
             $EncodedCommand = ConvertTo-TPLinkDataFormat -Body $JSON
@@ -104,6 +114,9 @@ Function Send-TPLinkCommand {
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
     $Stream.write($EncodedCommand,0,$EncodedCommand.Length)
 
+    #If NoWait, exit immediately and don't wait for response
+    if ($NoWait) { return $true }
+	
     #Wait for data to become available
     While ($TCPClient.Available -eq 0) {
             
